@@ -1,48 +1,6 @@
 Option Explicit
 
 
-Sub RegenerateTableNames()
-
-Dim Sheet As Worksheet
-Dim Table As ListObject
-
-For Each Sheet In ThisWorkbook.Worksheets
-    If Sheet.Name <> "README" And Sheet.Name <> "Mapping" Then
-        For Each Table In Sheet.ListObjects
-            Table.Name = GetMappingToByFrom(Table.ListColumns(1).Name)
-        Next Table
-    End If
-Next Sheet
-
-End Sub
-
-
-Function GetMappingToByFrom(MapFrom As String) As String
-
-Dim Sheet As Worksheet
-Dim Result As String
-Dim Row As ListRow
-
-On Error GoTo Catch
-    For Each Sheet In ThisWorkbook.Worksheets
-        If Sheet.Name = "Mapping" Then
-            For Each Row In Sheet.ListObjects(1).ListRows
-                If Row.Range(1).Cells.Value = MapFrom Then
-                    Result = Row.Range(2).Cells.Value
-                End If
-            Next Row
-            
-            GetMappingToByFrom = Result
-        End If
-    Next Sheet
-    Exit Function
-
-Catch:
-    Call Err.Raise(10001, ".GetMappingToByFrom", Err.Description)
-
-End Function
-
-
 Sub MergeXML()
 
 On Error GoTo Catch
@@ -84,6 +42,48 @@ Catch:
     Call Err.Raise(10001, "MergeXML", Err.Description, Err.HelpFile, Err.HelpContext)
 
 End Sub
+
+
+Sub RegenerateTableNames()
+
+Dim Sheet As Worksheet
+Dim Table As ListObject
+
+For Each Sheet In ThisWorkbook.Worksheets
+    If Sheet.Name <> "README" And Sheet.Name <> "Mapping" Then
+        For Each Table In Sheet.ListObjects
+            Table.Name = GetMappingToByFrom(Table.ListColumns(1).Name)
+        Next Table
+    End If
+Next Sheet
+
+End Sub
+
+
+Function GetMappingToByFrom(MapFrom As String) As String
+
+Dim Sheet As Worksheet
+Dim Result As String
+Dim Row As ListRow
+
+On Error GoTo Catch
+    For Each Sheet In ThisWorkbook.Worksheets
+        If Sheet.Name = "Mapping" Then
+            For Each Row In Sheet.ListObjects(1).ListRows
+                If Row.Range(1).Cells.Value = MapFrom Then
+                    Result = Row.Range(2).Cells.Value
+                End If
+            Next Row
+            
+            GetMappingToByFrom = Result
+        End If
+    Next Sheet
+    Exit Function
+
+Catch:
+    Call Err.Raise(10001, ".GetMappingToByFrom", Err.Description)
+
+End Function
 
 
 Function GetTableByName(Name As String) As ListObject
